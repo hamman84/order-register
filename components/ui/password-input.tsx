@@ -11,7 +11,8 @@ const PasswordInput = ({
   ref,
   className,
   ...props
-}: any & {
+}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+any & {
   ref: React.RefObject<HTMLInputElement>;
 }) => {
   const [showPassword, setShowPassword] = React.useState(false);

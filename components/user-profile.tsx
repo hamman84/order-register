@@ -32,7 +32,7 @@ import { toast } from "sonner";
 
 export function UserCard(props: { session: Session | null }) {
   const router = useRouter();
-  const { data, isPending } = useSession();
+  const { data } = useSession();
   const session = data || props.session;
   const [isSignOut, setIsSignOut] = useState<boolean>(false);
 
@@ -226,7 +226,7 @@ export function ChangePassword() {
 }
 
 export function EditUserDialog() {
-  const { data, isPending, error } = useSession();
+  const { data } = useSession();
   const [name, setName] = useState<string>();
   const router = useRouter();
   const [image, setImage] = useState<File | null>(null);

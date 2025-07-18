@@ -20,7 +20,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePathname } from "next/navigation";
-import { ModeToggle, SwitchTheme } from "./mode-toggle";
+import { SwitchTheme } from "./mode-toggle";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "@/lib/auth-client";

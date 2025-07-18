@@ -23,14 +23,14 @@ import FilterInput from "./filter-input";
 import { columns as originalColumns } from "./columns";
 import DeleteOrderDialog from "../delete-order-dialog";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filterOptions: { value: string; label: string }[];
   onOrderDeleted?: (orderId: string) => void;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string }, TValue>({
   columns,
   data,
   filterOptions,
