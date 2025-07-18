@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "postinstall": "prisma generate",
+    "postinstall": "npm run prisma:generate",
+    "prisma:generate": "prisma generate || (echo 'Prisma generate failed, retrying with checksum ignore...' && PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1 prisma generate)",
     "start": "next start",
     "lint": "next lint"
   },
