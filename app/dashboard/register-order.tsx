@@ -24,8 +24,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import { RefreshCcwIcon } from "lucide-react";
+import { CircleCheckBig, RefreshCcwIcon } from "lucide-react";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,6 +55,7 @@ const registerOrderSchema = z.object({
 
 interface RegisterOrderProps {
   userId: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onOrderCreated?: (order: any) => void;
 }
 
@@ -187,9 +199,38 @@ export default function RegisterOrder({
                 </FormItem>
               )}
             />
-            <Button type="submit" className="mt-4">
-              Registrar
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button type="button">Registrar</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <div className="flex flex-col gap-2 max-sm:items-center sm:flex-row sm:gap-4">
+                  <div
+                    className="flex size-9 shrink-0 items-center justify-center rounded-full border"
+                    aria-hidden="true"
+                  >
+                    <CircleCheckBig
+                      className="opacity-80 text-emerald-600"
+                      size={16}
+                    />
+                  </div>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Confirmar registro</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      ¿Estás seguro de que deseas registrar este pedido?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                </div>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => form.handleSubmit(onSubmit)()}
+                  >
+                    Confirmar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </form>
         </Form>
       </DialogContent>

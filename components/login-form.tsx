@@ -25,6 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 const loginFormSchema = z.object({
   email: z.email("Email inválido"),
@@ -122,7 +123,16 @@ export function LoginForm({
                     )}
                   />
                 </div>
-                <Button type="submit">Iniciar sesión</Button>
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting ? (
+                    <div className="flex items-center">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Cargando...
+                    </div>
+                  ) : (
+                    "Iniciar sesión"
+                  )}
+                </Button>
                 <div className="mt-4 text-center text-sm">
                   ¿No tienes una cuenta?{" "}
                   <Link

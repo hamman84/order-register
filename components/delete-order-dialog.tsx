@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { deleteOrder } from "@/lib/actions/delete-order";
+import { toast } from "sonner";
 
 interface DeleteOrderDialogProps {
   orderId: string;
@@ -29,9 +30,11 @@ export default function DeleteOrderDialog({
       await deleteOrder(orderId);
       if (onOrderDeleted) {
         onOrderDeleted(orderId);
+        toast.success("Orden eliminada correctamente");
       }
     } catch (error) {
       console.error("Error deleting order:", error);
+      toast.error("Error al eliminar la orden");
     }
   };
 

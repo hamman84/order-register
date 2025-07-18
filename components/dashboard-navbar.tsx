@@ -20,8 +20,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePathname } from "next/navigation";
-import AvatarMenu from "./avatar-menu";
-import { ModeToggle } from "./mode-toggle";
+import { ModeToggle, SwitchTheme } from "./mode-toggle";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "@/lib/auth-client";
@@ -35,7 +34,7 @@ const navigationLinks = [
 ];
 
 export default function DashboardNavbar() {
-  const user = useSession().data?.user;
+  const { data: session } = useSession();
 
   const pathname = usePathname();
   return (
@@ -80,53 +79,60 @@ export default function DashboardNavbar() {
               </NavigationMenu>
             </PopoverContent>
           </Popover>
-          <div className="flex items-center gap-6">
-            {/* Logo */}
-            <Link href="/">
-              <Image
-                src={"/logo.webp"}
-                alt="Logo"
-                className="object-contain"
-                width={130}
-                height={50}
-              />
-            </Link>
-            {/* Desktop navigation - icon only */}
-            <NavigationMenu className="hidden md:flex">
-              <NavigationMenuList className="gap-2">
+          {/* Logo */}
+          <Link href="/">
+            <Image
+              src={"/logo.webp"}
+              alt="Logo"
+              className="object-contain"
+              width={200}
+              height={50}
+            />
+          </Link>
+          {/* Desktop navigation - icon only */}
+          <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2">
+            <NavigationMenu>
+              <NavigationMenuList className="gap-4">
                 <TooltipProvider>
-                  {navigationLinks.map((link) => (
-                    <NavigationMenuItem key={link.label}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <NavigationMenuLink
-                            href={link.href}
-                            className="flex size-8 items-center justify-center p-1.5"
+                  {navigationLinks.map((link) => {
+                    const Icon = link.icon;
+                    return (
+                      <NavigationMenuItem key={link.label}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <NavigationMenuLink
+                              href={link.href}
+                              className="flex size-10 items-center justify-center p-1"
+                            >
+                              <Icon
+                                size={28}
+                                style={{ width: 28, height: 28 }}
+                                aria-hidden="true"
+                              />
+                              <span className="sr-only">{link.label}</span>
+                            </NavigationMenuLink>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            side="bottom"
+                            className="px-2 py-1 text-xs"
                           >
-                            <link.icon size={20} aria-hidden="true" />
-                            <span className="sr-only">{link.label}</span>
-                          </NavigationMenuLink>
-                        </TooltipTrigger>
-                        <TooltipContent
-                          side="bottom"
-                          className="px-2 py-1 text-xs"
-                        >
-                          <p>{link.label}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </NavigationMenuItem>
-                  ))}
+                            <p>{link.label}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </NavigationMenuItem>
+                    );
+                  })}
                 </TooltipProvider>
               </NavigationMenuList>
             </NavigationMenu>
           </div>
         </div>
         {/* Right side */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-6">
           {/* Theme toggle */}
-          <ModeToggle />
+          <SwitchTheme />
           {/* User menu */}
-          {user && <ProfileDialog user={user} />}
+          {session && <ProfileDialog session={session} />}
         </div>
       </div>
     </header>

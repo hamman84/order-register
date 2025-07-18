@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Moon, Sun } from "lucide-react";
+import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ToggleGroup, ToggleGroupItem } from "./animate-ui/radix/toggle-group";
 
 export function ModeToggle() {
   const { setTheme } = useTheme();
@@ -36,5 +37,42 @@ export function ModeToggle() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+export function SwitchTheme() {
+  const { setTheme, theme } = useTheme();
+
+  return (
+    <div suppressHydrationWarning>
+      <ToggleGroup
+        type="single"
+        defaultValue={theme}
+        className="border shadow-md rounded-lg p-1"
+        activeClassName="bg-primary/60"
+      >
+        <ToggleGroupItem
+          value="light"
+          onClick={() => setTheme("light")}
+          aria-label="Toggle light mode"
+        >
+          <Sun className="h-4 w-4" />
+        </ToggleGroupItem>
+        <ToggleGroupItem
+          value="dark"
+          onClick={() => setTheme("dark")}
+          aria-label="Toggle dark mode"
+        >
+          <Moon className="h-4 w-4" />
+        </ToggleGroupItem>
+        <ToggleGroupItem
+          value="system"
+          onClick={() => setTheme("system")}
+          aria-label="Toggle system mode"
+        >
+          <Monitor className="h-4 w-4" />
+        </ToggleGroupItem>
+      </ToggleGroup>
+    </div>
   );
 }
