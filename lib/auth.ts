@@ -7,6 +7,7 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+  trustedOrigins: ["https://order-register-eight.vercel.app/"],
   emailAndPassword: {
     enabled: true,
   },
