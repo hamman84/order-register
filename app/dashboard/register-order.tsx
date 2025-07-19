@@ -40,10 +40,12 @@ import { CircleCheckBig, RefreshCcwIcon } from "lucide-react";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Machine } from "@prisma/client";
+import { $Enums } from "@prisma/client";
 import { toast } from "sonner";
 import { registerOrder } from "@/lib/actions/register-order";
 import { useState } from "react";
+
+const Machine = $Enums.Machine;
 
 const registerOrderSchema = z.object({
   code: z.string().min(1, "El código es obligatorio"),
@@ -82,7 +84,7 @@ export default function RegisterOrder({
       const data = await registerOrder({
         userId,
         code: values.code,
-        machine: values.machine as Machine,
+        machine: values.machine,
         notes: values.notes,
         dieCutter: values.dieCutter,
         stamping: values.stamping,
