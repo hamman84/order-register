@@ -40,7 +40,7 @@ import { CircleCheckBig, RefreshCcwIcon } from "lucide-react";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { $Enums } from "@prisma/client";
+import { $Enums } from "@/lib/generated/prisma";
 import { toast } from "sonner";
 import { registerOrder } from "@/lib/actions/register-order";
 import { useState } from "react";
