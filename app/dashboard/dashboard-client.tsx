@@ -1,24 +1,24 @@
 "use client";
 
-import { createColumns, order } from "@/components/order-table/columns";
+import { createColumns } from "@/components/order-table/columns";
 import { DataTable } from "@/components/order-table/data-table";
 import { useState } from "react";
-import RegisterOrder from "./register-order";
+import RegisterOrder, { Order } from "./register-order";
 
 interface DashboardClientProps {
   userId: string;
-  initialOrders: order[];
+  initialOrders: Order[];
 }
 
 export default function DashboardClient({
   userId,
   initialOrders,
 }: DashboardClientProps) {
-  const [orders, setOrders] = useState<order[]>(initialOrders);
-  const [editingOrder, setEditingOrder] = useState<order | null>(null);
+  const [orders, setOrders] = useState<Order[]>(initialOrders);
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
-  const handleOrderCreated = (newOrder: order) => {
+  const handleOrderCreated = (newOrder: Order) => {
     setOrders((prev) => [newOrder, ...prev]);
   };
 
@@ -26,12 +26,12 @@ export default function DashboardClient({
     setOrders((prev) => prev.filter((order) => order.id !== orderId));
   };
 
-  const handleOrderEdit = (order: order) => {
+  const handleOrderEdit = (order: Order) => {
     setEditingOrder(order);
     setIsEditDialogOpen(true);
   };
 
-  const handleOrderUpdated = (updatedOrder: order) => {
+  const handleOrderUpdated = (updatedOrder: Order) => {
     setOrders((prev) =>
       prev.map((order) => (order.id === updatedOrder.id ? updatedOrder : order))
     );
