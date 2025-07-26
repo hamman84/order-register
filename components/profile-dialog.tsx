@@ -32,7 +32,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { User } from "better-auth";
-import { ChangePassword, EditUserDialog } from "./user-profile";
+import { ChangeEmail, ChangePassword, EditUserDialog } from "./user-profile";
 import { Session } from "@/lib/auth";
 import { Button } from "./ui/button";
 import { signOut } from "@/lib/auth-client";
@@ -123,6 +123,7 @@ export default function ProfileDialog({ session }: ProfileDialogProps) {
             </div>
             <EditUserDialog />
           </div>
+          <ChangeEmail />
           <ChangePassword />
           <Button
             className="gap-2 z-10"

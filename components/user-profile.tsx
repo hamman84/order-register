@@ -1,14 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -22,83 +14,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
-import { client, signOut, useSession } from "@/lib/auth-client";
-import { Session } from "@/lib/auth";
-import { Edit, Loader2, LogOut, X } from "lucide-react";
+import { client, useSession } from "@/lib/auth-client";
+import { Edit, Loader2, MailQuestion, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-
-export function UserCard(props: { session: Session | null }) {
-  const router = useRouter();
-  const { data } = useSession();
-  const session = data || props.session;
-  const [isSignOut, setIsSignOut] = useState<boolean>(false);
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Hola, {session?.user.name}!</CardTitle>
-      </CardHeader>
-      <CardContent className="grid gap-8 grid-cols-1">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-4">
-              <Avatar className="hidden h-9 w-9 sm:flex ">
-                <AvatarImage
-                  src={session?.user.image || undefined}
-                  alt="Avatar"
-                  className="object-cover"
-                />
-                <AvatarFallback>{session?.user.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div className="grid">
-                <div className="flex items-center gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    {session?.user.name}
-                  </p>
-                </div>
-                <p className="text-sm">{session?.user.email}</p>
-              </div>
-            </div>
-            <EditUserDialog />
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter className="gap-2 justify-between items-center">
-        <ChangePassword />
-        <Button
-          className="gap-2 z-10"
-          variant="secondary"
-          onClick={async () => {
-            setIsSignOut(true);
-            await signOut({
-              fetchOptions: {
-                onSuccess() {
-                  router.push("/");
-                },
-              },
-            });
-            setIsSignOut(false);
-          }}
-          disabled={isSignOut}
-        >
-          <span className="text-sm">
-            {isSignOut ? (
-              <Loader2 size={15} className="animate-spin" />
-            ) : (
-              <div className="flex items-center gap-2">
-                <LogOut size={16} />
-                Cerrar sesión
-              </div>
-            )}
-          </span>
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
 
 async function convertImageToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -107,6 +28,79 @@ async function convertImageToBase64(file: File): Promise<string> {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+export function ChangeEmail() {
+  const { data, refetch } = useSession();
+  const [newEmail, setNewEmail] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button className="gap-2 z-10" variant="outline" size="sm">
+          <MailQuestion size={16} />
+          <span className="text-sm text-muted-foreground">
+            Cambiar correo electrónico
+          </span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px] w-11/12">
+        <DialogHeader>
+          <DialogTitle>Cambiar correo electrónico</DialogTitle>
+          <DialogDescription>Cambia tu correo electrónico</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-2">
+          <Label htmlFor="current-email">Correo actual</Label>
+          <span>{data?.user.email}</span>
+          <Label htmlFor="new-email">Nuevo correo</Label>
+          <Input
+            id="new-email"
+            value={newEmail}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNewEmail(e.target.value)
+            }
+            autoComplete="new-email"
+            placeholder="Nuevo correo"
+          />
+        </div>
+        <DialogFooter>
+          <Button
+            onClick={async () => {
+              if (!newEmail) {
+                toast.error("Por favor, ingresa un nuevo correo electrónico");
+                return;
+              }
+              setLoading(true);
+              const res = await client.changeEmail({
+                newEmail: newEmail,
+              });
+              setLoading(false);
+              if (res.error) {
+                toast.error(
+                  res.error.message ||
+                    "No se pudo cambiar tu correo electrónico. Asegúrate de que sea correcto"
+                );
+                setNewEmail("");
+              } else {
+                refetch();
+                setOpen(false);
+                toast.success("Correo electrónico cambiado con éxito");
+                setNewEmail("");
+              }
+            }}
+          >
+            {loading ? (
+              <Loader2 size={15} className="animate-spin" />
+            ) : (
+              "Cambiar correo electrónico"
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 export function ChangePassword() {
