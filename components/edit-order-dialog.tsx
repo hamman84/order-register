@@ -1,10 +1,11 @@
 "use client";
 
-import RegisterOrder, { Order } from "@/app/dashboard/register-order";
+import RegisterOrder from "@/app/dashboard/register-order";
 import { Button } from "./ui/button";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { useSession } from "@/lib/auth-client";
+import { order } from "./order-table/columns";
 
 interface EditOrderDialogProps {
   selectedOrderId: string;
@@ -30,7 +31,7 @@ export default function EditOrderDialog({
         <RegisterOrder
           userId={userId}
           mode="edit"
-          existingOrder={{ id: selectedOrderId } as Order} // Assuming you have the order data available
+          existingOrder={{ id: selectedOrderId } as order} // Assuming you have the order data available
           isOpen={openDialog}
           onOrderUpdated={(order) => {
             console.log("Order updated:", order);

@@ -8,17 +8,23 @@ export async function updateOrder({
   userId,
   code,
   machine,
+  moreMachines,
   notes,
   dieCutter,
+  newDieCutter,
   stamping,
+  newStamping,
 }: {
   id: string;
   userId: string;
   code: string;
   machine: Machine;
+  moreMachines?: Machine[];
   notes?: string;
   dieCutter?: string;
   stamping?: string;
+  newDieCutter?: boolean;
+  newStamping?: boolean;
 }) {
   try {
     const data = await prisma.order.update({
@@ -27,9 +33,12 @@ export async function updateOrder({
         userId,
         code,
         machine,
+        moreMachines: moreMachines || [],
         notes,
         dieCutter,
+        newDieCutter: newDieCutter || false,
         stamping,
+        newStamping: newStamping || false,
       },
     });
 

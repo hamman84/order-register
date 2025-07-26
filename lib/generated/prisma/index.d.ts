@@ -5754,7 +5754,9 @@ export namespace Prisma {
     machine: $Enums.Machine | null
     notes: string | null
     dieCutter: string | null
+    newDieCutter: boolean | null
     stamping: string | null
+    newStamping: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5766,7 +5768,9 @@ export namespace Prisma {
     machine: $Enums.Machine | null
     notes: string | null
     dieCutter: string | null
+    newDieCutter: boolean | null
     stamping: string | null
+    newStamping: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5776,9 +5780,12 @@ export namespace Prisma {
     userId: number
     code: number
     machine: number
+    moreMachines: number
     notes: number
     dieCutter: number
+    newDieCutter: number
     stamping: number
+    newStamping: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5792,7 +5799,9 @@ export namespace Prisma {
     machine?: true
     notes?: true
     dieCutter?: true
+    newDieCutter?: true
     stamping?: true
+    newStamping?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5804,7 +5813,9 @@ export namespace Prisma {
     machine?: true
     notes?: true
     dieCutter?: true
+    newDieCutter?: true
     stamping?: true
+    newStamping?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5814,9 +5825,12 @@ export namespace Prisma {
     userId?: true
     code?: true
     machine?: true
+    moreMachines?: true
     notes?: true
     dieCutter?: true
+    newDieCutter?: true
     stamping?: true
+    newStamping?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5899,9 +5913,12 @@ export namespace Prisma {
     userId: string
     code: string
     machine: $Enums.Machine
+    moreMachines: $Enums.Machine[]
     notes: string | null
     dieCutter: string | null
+    newDieCutter: boolean
     stamping: string | null
+    newStamping: boolean
     createdAt: Date
     updatedAt: Date
     _count: OrderCountAggregateOutputType | null
@@ -5928,9 +5945,12 @@ export namespace Prisma {
     userId?: boolean
     code?: boolean
     machine?: boolean
+    moreMachines?: boolean
     notes?: boolean
     dieCutter?: boolean
+    newDieCutter?: boolean
     stamping?: boolean
+    newStamping?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5941,9 +5961,12 @@ export namespace Prisma {
     userId?: boolean
     code?: boolean
     machine?: boolean
+    moreMachines?: boolean
     notes?: boolean
     dieCutter?: boolean
+    newDieCutter?: boolean
     stamping?: boolean
+    newStamping?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5954,9 +5977,12 @@ export namespace Prisma {
     userId?: boolean
     code?: boolean
     machine?: boolean
+    moreMachines?: boolean
     notes?: boolean
     dieCutter?: boolean
+    newDieCutter?: boolean
     stamping?: boolean
+    newStamping?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5967,14 +5993,17 @@ export namespace Prisma {
     userId?: boolean
     code?: boolean
     machine?: boolean
+    moreMachines?: boolean
     notes?: boolean
     dieCutter?: boolean
+    newDieCutter?: boolean
     stamping?: boolean
+    newStamping?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "code" | "machine" | "notes" | "dieCutter" | "stamping" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "code" | "machine" | "moreMachines" | "notes" | "dieCutter" | "newDieCutter" | "stamping" | "newStamping" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -5995,9 +6024,12 @@ export namespace Prisma {
       userId: string
       code: string
       machine: $Enums.Machine
+      moreMachines: $Enums.Machine[]
       notes: string | null
       dieCutter: string | null
+      newDieCutter: boolean
       stamping: string | null
+      newStamping: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["order"]>
@@ -6428,9 +6460,12 @@ export namespace Prisma {
     readonly userId: FieldRef<"Order", 'String'>
     readonly code: FieldRef<"Order", 'String'>
     readonly machine: FieldRef<"Order", 'Machine'>
+    readonly moreMachines: FieldRef<"Order", 'Machine[]'>
     readonly notes: FieldRef<"Order", 'String'>
     readonly dieCutter: FieldRef<"Order", 'String'>
+    readonly newDieCutter: FieldRef<"Order", 'Boolean'>
     readonly stamping: FieldRef<"Order", 'String'>
+    readonly newStamping: FieldRef<"Order", 'Boolean'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
   }
@@ -6925,9 +6960,12 @@ export namespace Prisma {
     userId: 'userId',
     code: 'code',
     machine: 'machine',
+    moreMachines: 'moreMachines',
     notes: 'notes',
     dieCutter: 'dieCutter',
+    newDieCutter: 'newDieCutter',
     stamping: 'stamping',
+    newStamping: 'newStamping',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -7336,9 +7374,12 @@ export namespace Prisma {
     userId?: StringFilter<"Order"> | string
     code?: StringFilter<"Order"> | string
     machine?: EnumMachineFilter<"Order"> | $Enums.Machine
+    moreMachines?: EnumMachineNullableListFilter<"Order">
     notes?: StringNullableFilter<"Order"> | string | null
     dieCutter?: StringNullableFilter<"Order"> | string | null
+    newDieCutter?: BoolFilter<"Order"> | boolean
     stamping?: StringNullableFilter<"Order"> | string | null
+    newStamping?: BoolFilter<"Order"> | boolean
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -7349,9 +7390,12 @@ export namespace Prisma {
     userId?: SortOrder
     code?: SortOrder
     machine?: SortOrder
+    moreMachines?: SortOrder
     notes?: SortOrderInput | SortOrder
     dieCutter?: SortOrderInput | SortOrder
+    newDieCutter?: SortOrder
     stamping?: SortOrderInput | SortOrder
+    newStamping?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -7365,9 +7409,12 @@ export namespace Prisma {
     NOT?: OrderWhereInput | OrderWhereInput[]
     userId?: StringFilter<"Order"> | string
     machine?: EnumMachineFilter<"Order"> | $Enums.Machine
+    moreMachines?: EnumMachineNullableListFilter<"Order">
     notes?: StringNullableFilter<"Order"> | string | null
     dieCutter?: StringNullableFilter<"Order"> | string | null
+    newDieCutter?: BoolFilter<"Order"> | boolean
     stamping?: StringNullableFilter<"Order"> | string | null
+    newStamping?: BoolFilter<"Order"> | boolean
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -7378,9 +7425,12 @@ export namespace Prisma {
     userId?: SortOrder
     code?: SortOrder
     machine?: SortOrder
+    moreMachines?: SortOrder
     notes?: SortOrderInput | SortOrder
     dieCutter?: SortOrderInput | SortOrder
+    newDieCutter?: SortOrder
     stamping?: SortOrderInput | SortOrder
+    newStamping?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: OrderCountOrderByAggregateInput
@@ -7396,9 +7446,12 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"Order"> | string
     code?: StringWithAggregatesFilter<"Order"> | string
     machine?: EnumMachineWithAggregatesFilter<"Order"> | $Enums.Machine
+    moreMachines?: EnumMachineNullableListFilter<"Order">
     notes?: StringNullableWithAggregatesFilter<"Order"> | string | null
     dieCutter?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    newDieCutter?: BoolWithAggregatesFilter<"Order"> | boolean
     stamping?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    newStamping?: BoolWithAggregatesFilter<"Order"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
   }
@@ -7746,9 +7799,12 @@ export namespace Prisma {
     id?: string
     code: string
     machine: $Enums.Machine
+    moreMachines?: OrderCreatemoreMachinesInput | $Enums.Machine[]
     notes?: string | null
     dieCutter?: string | null
+    newDieCutter?: boolean
     stamping?: string | null
+    newStamping?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutOrdersInput
@@ -7759,9 +7815,12 @@ export namespace Prisma {
     userId: string
     code: string
     machine: $Enums.Machine
+    moreMachines?: OrderCreatemoreMachinesInput | $Enums.Machine[]
     notes?: string | null
     dieCutter?: string | null
+    newDieCutter?: boolean
     stamping?: string | null
+    newStamping?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7770,9 +7829,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     machine?: EnumMachineFieldUpdateOperationsInput | $Enums.Machine
+    moreMachines?: OrderUpdatemoreMachinesInput | $Enums.Machine[]
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dieCutter?: NullableStringFieldUpdateOperationsInput | string | null
+    newDieCutter?: BoolFieldUpdateOperationsInput | boolean
     stamping?: NullableStringFieldUpdateOperationsInput | string | null
+    newStamping?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
@@ -7783,9 +7845,12 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     machine?: EnumMachineFieldUpdateOperationsInput | $Enums.Machine
+    moreMachines?: OrderUpdatemoreMachinesInput | $Enums.Machine[]
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dieCutter?: NullableStringFieldUpdateOperationsInput | string | null
+    newDieCutter?: BoolFieldUpdateOperationsInput | boolean
     stamping?: NullableStringFieldUpdateOperationsInput | string | null
+    newStamping?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7795,9 +7860,12 @@ export namespace Prisma {
     userId: string
     code: string
     machine: $Enums.Machine
+    moreMachines?: OrderCreatemoreMachinesInput | $Enums.Machine[]
     notes?: string | null
     dieCutter?: string | null
+    newDieCutter?: boolean
     stamping?: string | null
+    newStamping?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7806,9 +7874,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     machine?: EnumMachineFieldUpdateOperationsInput | $Enums.Machine
+    moreMachines?: OrderUpdatemoreMachinesInput | $Enums.Machine[]
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dieCutter?: NullableStringFieldUpdateOperationsInput | string | null
+    newDieCutter?: BoolFieldUpdateOperationsInput | boolean
     stamping?: NullableStringFieldUpdateOperationsInput | string | null
+    newStamping?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7818,9 +7889,12 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     machine?: EnumMachineFieldUpdateOperationsInput | $Enums.Machine
+    moreMachines?: OrderUpdatemoreMachinesInput | $Enums.Machine[]
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dieCutter?: NullableStringFieldUpdateOperationsInput | string | null
+    newDieCutter?: BoolFieldUpdateOperationsInput | boolean
     stamping?: NullableStringFieldUpdateOperationsInput | string | null
+    newStamping?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8142,14 +8216,25 @@ export namespace Prisma {
     not?: NestedEnumMachineFilter<$PrismaModel> | $Enums.Machine
   }
 
+  export type EnumMachineNullableListFilter<$PrismaModel = never> = {
+    equals?: $Enums.Machine[] | ListEnumMachineFieldRefInput<$PrismaModel> | null
+    has?: $Enums.Machine | EnumMachineFieldRefInput<$PrismaModel> | null
+    hasEvery?: $Enums.Machine[] | ListEnumMachineFieldRefInput<$PrismaModel>
+    hasSome?: $Enums.Machine[] | ListEnumMachineFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type OrderCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     code?: SortOrder
     machine?: SortOrder
+    moreMachines?: SortOrder
     notes?: SortOrder
     dieCutter?: SortOrder
+    newDieCutter?: SortOrder
     stamping?: SortOrder
+    newStamping?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -8161,7 +8246,9 @@ export namespace Prisma {
     machine?: SortOrder
     notes?: SortOrder
     dieCutter?: SortOrder
+    newDieCutter?: SortOrder
     stamping?: SortOrder
+    newStamping?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -8173,7 +8260,9 @@ export namespace Prisma {
     machine?: SortOrder
     notes?: SortOrder
     dieCutter?: SortOrder
+    newDieCutter?: SortOrder
     stamping?: SortOrder
+    newStamping?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -8362,6 +8451,10 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountsInput, UserUpdateWithoutAccountsInput>, UserUncheckedUpdateWithoutAccountsInput>
   }
 
+  export type OrderCreatemoreMachinesInput = {
+    set: $Enums.Machine[]
+  }
+
   export type UserCreateNestedOneWithoutOrdersInput = {
     create?: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
     connectOrCreate?: UserCreateOrConnectWithoutOrdersInput
@@ -8370,6 +8463,11 @@ export namespace Prisma {
 
   export type EnumMachineFieldUpdateOperationsInput = {
     set?: $Enums.Machine
+  }
+
+  export type OrderUpdatemoreMachinesInput = {
+    set?: $Enums.Machine[]
+    push?: $Enums.Machine | $Enums.Machine[]
   }
 
   export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
@@ -8548,9 +8646,12 @@ export namespace Prisma {
     id?: string
     code: string
     machine: $Enums.Machine
+    moreMachines?: OrderCreatemoreMachinesInput | $Enums.Machine[]
     notes?: string | null
     dieCutter?: string | null
+    newDieCutter?: boolean
     stamping?: string | null
+    newStamping?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8559,9 +8660,12 @@ export namespace Prisma {
     id?: string
     code: string
     machine: $Enums.Machine
+    moreMachines?: OrderCreatemoreMachinesInput | $Enums.Machine[]
     notes?: string | null
     dieCutter?: string | null
+    newDieCutter?: boolean
     stamping?: string | null
+    newStamping?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8670,9 +8774,12 @@ export namespace Prisma {
     userId?: StringFilter<"Order"> | string
     code?: StringFilter<"Order"> | string
     machine?: EnumMachineFilter<"Order"> | $Enums.Machine
+    moreMachines?: EnumMachineNullableListFilter<"Order">
     notes?: StringNullableFilter<"Order"> | string | null
     dieCutter?: StringNullableFilter<"Order"> | string | null
+    newDieCutter?: BoolFilter<"Order"> | boolean
     stamping?: StringNullableFilter<"Order"> | string | null
+    newStamping?: BoolFilter<"Order"> | boolean
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
   }
@@ -8950,9 +9057,12 @@ export namespace Prisma {
     id?: string
     code: string
     machine: $Enums.Machine
+    moreMachines?: OrderCreatemoreMachinesInput | $Enums.Machine[]
     notes?: string | null
     dieCutter?: string | null
+    newDieCutter?: boolean
     stamping?: string | null
+    newStamping?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8986,9 +9096,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     machine?: EnumMachineFieldUpdateOperationsInput | $Enums.Machine
+    moreMachines?: OrderUpdatemoreMachinesInput | $Enums.Machine[]
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dieCutter?: NullableStringFieldUpdateOperationsInput | string | null
+    newDieCutter?: BoolFieldUpdateOperationsInput | boolean
     stamping?: NullableStringFieldUpdateOperationsInput | string | null
+    newStamping?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8997,9 +9110,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     machine?: EnumMachineFieldUpdateOperationsInput | $Enums.Machine
+    moreMachines?: OrderUpdatemoreMachinesInput | $Enums.Machine[]
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dieCutter?: NullableStringFieldUpdateOperationsInput | string | null
+    newDieCutter?: BoolFieldUpdateOperationsInput | boolean
     stamping?: NullableStringFieldUpdateOperationsInput | string | null
+    newStamping?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9008,9 +9124,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     machine?: EnumMachineFieldUpdateOperationsInput | $Enums.Machine
+    moreMachines?: OrderUpdatemoreMachinesInput | $Enums.Machine[]
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dieCutter?: NullableStringFieldUpdateOperationsInput | string | null
+    newDieCutter?: BoolFieldUpdateOperationsInput | boolean
     stamping?: NullableStringFieldUpdateOperationsInput | string | null
+    newStamping?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

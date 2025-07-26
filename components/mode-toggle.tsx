@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ToggleGroup, ToggleGroupItem } from "./animate-ui/radix/toggle-group";
+import { useEffect, useState } from "react";
 
 export function ModeToggle() {
   const { setTheme } = useTheme();
@@ -42,37 +43,53 @@ export function ModeToggle() {
 
 export function SwitchTheme() {
   const { setTheme, theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    // Renderiza un placeholder durante la hidratación que coincida con el diseño
+    return (
+      <div className="border shadow-md rounded-lg p-1 h-10 w-[120px] bg-background">
+        <div className="flex gap-0.5">
+          <div className="w-8 h-8 rounded-sm" />
+          <div className="w-8 h-8 rounded-sm" />
+          <div className="w-8 h-8 rounded-sm" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div suppressHydrationWarning>
-      <ToggleGroup
-        type="single"
-        defaultValue={theme}
-        className="border shadow-md rounded-lg p-1"
-        activeClassName="bg-primary/60"
+    <ToggleGroup
+      type="single"
+      defaultValue={theme}
+      className="border shadow-md rounded-lg p-1"
+      activeClassName="bg-primary/60"
+    >
+      <ToggleGroupItem
+        value="light"
+        onClick={() => setTheme("light")}
+        aria-label="Toggle light mode"
       >
-        <ToggleGroupItem
-          value="light"
-          onClick={() => setTheme("light")}
-          aria-label="Toggle light mode"
-        >
-          <Sun className="h-4 w-4" />
-        </ToggleGroupItem>
-        <ToggleGroupItem
-          value="dark"
-          onClick={() => setTheme("dark")}
-          aria-label="Toggle dark mode"
-        >
-          <Moon className="h-4 w-4" />
-        </ToggleGroupItem>
-        <ToggleGroupItem
-          value="system"
-          onClick={() => setTheme("system")}
-          aria-label="Toggle system mode"
-        >
-          <Monitor className="h-4 w-4" />
-        </ToggleGroupItem>
-      </ToggleGroup>
-    </div>
+        <Sun className="h-4 w-4" />
+      </ToggleGroupItem>
+      <ToggleGroupItem
+        value="dark"
+        onClick={() => setTheme("dark")}
+        aria-label="Toggle dark mode"
+      >
+        <Moon className="h-4 w-4" />
+      </ToggleGroupItem>
+      <ToggleGroupItem
+        value="system"
+        onClick={() => setTheme("system")}
+        aria-label="Toggle system mode"
+      >
+        <Monitor className="h-4 w-4" />
+      </ToggleGroupItem>
+    </ToggleGroup>
   );
 }

@@ -36,34 +36,51 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import { CircleCheckBig, RefreshCcwIcon, Edit } from "lucide-react";
+import { CircleCheckBig, RefreshCcwIcon, Edit, Plus, X } from "lucide-react";
 import z from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { $Enums } from "@/lib/generated/prisma";
 import { toast } from "sonner";
 import { registerOrder } from "@/lib/actions/register-order";
 import { updateOrder } from "@/lib/actions/update-order";
 import { useState, useEffect } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Machine = $Enums.Machine;
 
 const registerOrderSchema = z.object({
   code: z.string().min(1, "El código es obligatorio"),
   machine: z.enum(Machine, { error: "Selecciona una máquina verificada" }),
+  moreMachines: z.array(
+    z.object({
+      machine: z.enum(Machine, {
+        error: "Selecciona una máquina verificada",
+      }),
+    })
+  ),
   notes: z.string().optional(),
   dieCutter: z.string().optional(),
+  newDieCutter: z.boolean(),
   stamping: z.string().optional(),
+  newStamping: z.boolean(),
 });
+
+type RegisterOrderForm = z.infer<typeof registerOrderSchema>;
 
 // Tipo para la orden existente
 export interface Order {
   id: string;
   code: string;
   machine: string;
+  moreMachines?: string[];
   notes?: string;
   dieCutter?: string;
+  newDieCutter?: boolean;
   stamping?: string;
+  newStamping?: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface RegisterOrderProps {
@@ -95,39 +112,61 @@ export default function RegisterOrder({
   const dialogOpen = isOpen !== undefined ? isOpen : openDialog;
   const setDialogOpen = onOpenChange || setOpenDialog;
 
-  const form = useForm<z.infer<typeof registerOrderSchema>>({
+  const form = useForm<RegisterOrderForm>({
     resolver: zodResolver(registerOrderSchema),
     defaultValues: {
       code: "",
       machine: Machine.WANJIE,
+      moreMachines: [],
       notes: "",
       dieCutter: "",
+      newDieCutter: false,
       stamping: "",
+      newStamping: false,
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "moreMachines",
   });
 
   // Cargar datos existentes cuando se cambia a modo edición
   useEffect(() => {
     if (mode === "edit" && existingOrder) {
+      const moreMachinesArray =
+        existingOrder.moreMachines?.map((machine) => ({
+          machine: machine as $Enums.Machine,
+        })) || [];
       form.reset({
         code: existingOrder.code,
         machine: existingOrder.machine as $Enums.Machine,
+        moreMachines: moreMachinesArray,
         notes: existingOrder.notes || "",
         dieCutter: existingOrder.dieCutter || "",
+        newDieCutter: existingOrder.newDieCutter || false,
         stamping: existingOrder.stamping || "",
+        newStamping: existingOrder.newStamping || false,
       });
     } else if (mode === "create") {
       form.reset({
         code: "",
         machine: Machine.WANJIE,
+        moreMachines: [],
         notes: "",
         dieCutter: "",
+        newDieCutter: false,
         stamping: "",
+        newStamping: false,
       });
     }
   }, [mode, existingOrder, form]);
 
-  async function onSubmit(values: z.infer<typeof registerOrderSchema>) {
+  const addMachine = () => {
+    append({ machine: Machine.WANJIE });
+  };
+
+  async function onSubmit(values: RegisterOrderForm) {
     console.log(
       `${mode === "edit" ? "Updating" : "Submitting"} order:`,
       values
@@ -135,15 +174,23 @@ export default function RegisterOrder({
     try {
       let data;
 
+      // Convertir moreMachines a array de strings
+      const moreMachinesArray = values.moreMachines?.map(
+        (item) => item.machine
+      );
+
       if (mode === "edit" && existingOrder) {
         data = await updateOrder({
           id: existingOrder.id,
           userId,
           code: values.code,
           machine: values.machine as $Enums.Machine,
+          moreMachines: moreMachinesArray,
           notes: values.notes,
           dieCutter: values.dieCutter,
+          newDieCutter: values.newDieCutter,
           stamping: values.stamping,
+          newStamping: values.newStamping,
         });
         toast.success("Parte de trabajo actualizado correctamente");
         onOrderUpdated?.(data);
@@ -152,9 +199,12 @@ export default function RegisterOrder({
           userId,
           code: values.code,
           machine: values.machine,
+          moreMachines: moreMachinesArray,
           notes: values.notes,
           dieCutter: values.dieCutter,
+          newDieCutter: values.newDieCutter,
           stamping: values.stamping,
+          newStamping: values.newStamping,
         });
         toast.success("Parte de trabajo registrado correctamente");
         onOrderCreated?.(data);
@@ -178,7 +228,7 @@ export default function RegisterOrder({
   }
 
   const dialogContent = (
-    <DialogContent>
+    <DialogContent className="max-h-[90vh] overflow-y-auto">
       <div className="flex flex-col items-center gap-2">
         <div
           className="flex size-11 shrink-0 items-center justify-center rounded-full border"
@@ -204,6 +254,7 @@ export default function RegisterOrder({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
+            control={form.control}
             name="code"
             render={({ field }) => (
               <FormItem>
@@ -220,30 +271,88 @@ export default function RegisterOrder({
             name="machine"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Máquina</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona una máquina verificada para mostrar" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {Object.values(Machine).map((machine) => (
-                      <SelectItem key={machine} value={machine}>
-                        {machine}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormLabel>Máquina Principal</FormLabel>
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona una máquina verificada para mostrar" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.values(Machine).map((machine) => (
+                          <SelectItem key={machine} value={machine}>
+                            {machine}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={addMachine}
+                  >
+                    <Plus size={16} />
+                  </Button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          {fields.map((field, index) => (
+            <FormField
+              key={field.id}
+              control={form.control}
+              name={`moreMachines.${index}.machine`}
+              render={({ field: machineField }) => (
+                <FormItem>
+                  <FormLabel>Máquina Adicional {index + 1}</FormLabel>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <Select
+                        onValueChange={machineField.onChange}
+                        defaultValue={machineField.value}
+                        value={machineField.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona una máquina adicional" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.values(Machine).map((machine) => (
+                            <SelectItem key={machine} value={machine}>
+                              {machine}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => remove(index)}
+                    >
+                      <X size={16} />
+                    </Button>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+
           <FormField
+            control={form.control}
             name="notes"
             render={({ field }) => (
               <FormItem>
@@ -256,25 +365,69 @@ export default function RegisterOrder({
             )}
           />
           <FormField
+            control={form.control}
             name="dieCutter"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Nº de troquel</FormLabel>
-                <FormControl>
-                  <Input placeholder="Nº de troquel" {...field} />
-                </FormControl>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1">
+                    <FormControl>
+                      <Input placeholder="Nº de troquel" {...field} />
+                    </FormControl>
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="newDieCutter"
+                    render={({ field: checkboxField }) => (
+                      <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={checkboxField.value}
+                            onCheckedChange={checkboxField.onChange}
+                          />
+                        </FormControl>
+                        <FormLabel className="text-sm font-normal">
+                          Nuevo
+                        </FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField
+            control={form.control}
             name="stamping"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Nº de estampación</FormLabel>
-                <FormControl>
-                  <Input placeholder="Nº de estampación" {...field} />
-                </FormControl>
+                <div className="flex gap-2 items-center">
+                  <div className="flex-1">
+                    <FormControl>
+                      <Input placeholder="Nº de estampación" {...field} />
+                    </FormControl>
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="newStamping"
+                    render={({ field: checkboxField }) => (
+                      <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={checkboxField.value}
+                            onCheckedChange={checkboxField.onChange}
+                          />
+                        </FormControl>
+                        <FormLabel className="text-sm font-normal">
+                          Nuevo
+                        </FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormMessage />
               </FormItem>
             )}

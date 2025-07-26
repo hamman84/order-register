@@ -7,16 +7,22 @@ export async function registerOrder({
   userId,
   code,
   machine,
+  moreMachines,
   notes,
   dieCutter,
+  newDieCutter,
   stamping,
+  newStamping,
 }: {
   userId: string;
   code: string;
   machine: Machine;
+  moreMachines?: Machine[];
   notes?: string;
   dieCutter?: string;
   stamping?: string;
+  newDieCutter?: boolean;
+  newStamping?: boolean;
 }) {
   try {
     const data = await prisma.order.create({
@@ -24,9 +30,12 @@ export async function registerOrder({
         userId,
         code,
         machine,
+        moreMachines: moreMachines || [],
         notes,
         dieCutter,
+        newDieCutter: newDieCutter || false,
         stamping,
+        newStamping: newStamping || false,
       },
     });
 

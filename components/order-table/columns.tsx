@@ -1,33 +1,15 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Pencil } from "lucide-react";
+import { ArrowUpDown, BadgePlus, Pencil } from "lucide-react";
 import { Button } from "../ui/button";
 import DeleteOrderDialog from "../delete-order-dialog";
-
-export type order = {
-  id: string;
-  code: string;
-  machine:
-    | "Wanjie"
-    | "Viva1"
-    | "Berra1"
-    | "Berra2"
-    | "P5"
-    | "E5"
-    | "Wei"
-    | "Mida"
-    | "HP";
-  notes: string;
-  dieCutter: string;
-  stamping: string;
-  createdAt: Date;
-};
+import { Order } from "@/app/dashboard/register-order";
 
 // Crear columnas como función para poder pasar callbacks
 export const createColumns = (
-  onEdit?: (order: order) => void,
+  onEdit?: (order: Order) => void,
   onDelete?: (orderId: string) => void
-): ColumnDef<order>[] => [
+): ColumnDef<Order>[] => [
   {
     accessorKey: "code",
     header: ({ column }) => {
@@ -55,6 +37,16 @@ export const createColumns = (
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const machine = row.original.machine;
+      const moreMachines = row.original.moreMachines || [];
+      return (
+        <span className="capitalize">
+          {machine}{" "}
+          {moreMachines.length > 0 && <span>/ {moreMachines.join("/ ")}</span>}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "notes",
@@ -75,6 +67,28 @@ export const createColumns = (
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const dieCutter = row.original.dieCutter;
+      return dieCutter ? (
+        <div className="flex items-center justify-center gap-2">
+          <span className="capitalize">{dieCutter}</span>
+          {row.original.newDieCutter && (
+            <span className="text-green-500">
+              <BadgePlus className="inline h-4 w-4" />
+            </span>
+          )}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center gap-2">
+          <span className="text-muted-foreground">N/A</span>
+          {row.original.newDieCutter && (
+            <span className="text-green-500">
+              <BadgePlus className="inline h-4 w-4" />
+            </span>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "stamping",
@@ -89,10 +103,31 @@ export const createColumns = (
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const stamping = row.original.stamping;
+      return stamping ? (
+        <div className="flex items-center justify-center gap-2">
+          <span className="capitalize">{stamping}</span>
+          {row.original.newStamping && (
+            <span className="text-green-500">
+              <BadgePlus className="inline h-4 w-4" />
+            </span>
+          )}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center gap-2">
+          <span className="text-muted-foreground">N/A</span>
+          {row.original.newStamping && (
+            <span className="text-green-500">
+              <BadgePlus className="inline h-4 w-4" />
+            </span>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
-    cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
     header: ({ column }) => {
       return (
         <Button
@@ -102,6 +137,13 @@ export const createColumns = (
           <strong>Fecha de Creación</strong>
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <div className="text-center">
+          {new Date(row.original.createdAt).toLocaleDateString()}
+        </div>
       );
     },
   },
