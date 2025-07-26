@@ -1,6 +1,6 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Pencil } from "lucide-react";
 import { Button } from "../ui/button";
 import DeleteOrderDialog from "../delete-order-dialog";
 
@@ -22,7 +22,12 @@ export type order = {
   stamping: string;
   createdAt: Date;
 };
-export const columns: ColumnDef<order>[] = [
+
+// Crear columnas como función para poder pasar callbacks
+export const createColumns = (
+  onEdit?: (order: order) => void,
+  onDelete?: (orderId: string) => void
+): ColumnDef<order>[] => [
   {
     accessorKey: "code",
     header: ({ column }) => {
@@ -103,7 +108,29 @@ export const columns: ColumnDef<order>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      return <DeleteOrderDialog orderId={row.original.id} />;
+      return (
+        <div className="flex items-center gap-2">
+          {onEdit && (
+            <Button
+              className="cursor-pointer hover:text-emerald-700"
+              variant="outline"
+              size="sm"
+              onClick={() => onEdit(row.original)}
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+          )}
+          {onDelete && (
+            <DeleteOrderDialog
+              orderId={row.original.id}
+              onOrderDeleted={onDelete}
+            />
+          )}
+        </div>
+      );
     },
   },
 ];
+
+// Mantener las columnas básicas para compatibilidad
+export const columns = createColumns();

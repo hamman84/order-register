@@ -18,23 +18,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import FilterInput from "./filter-input";
-import { columns as originalColumns } from "./columns";
-import DeleteOrderDialog from "../delete-order-dialog";
 
 interface DataTableProps<TData extends { id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filterOptions: { value: string; label: string }[];
   onOrderDeleted?: (orderId: string) => void;
+  onOrderEdit?: (order: TData) => void;
 }
 
 export function DataTable<TData extends { id: string }, TValue>({
   columns,
   data,
   filterOptions,
-  onOrderDeleted,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -43,30 +41,9 @@ export function DataTable<TData extends { id: string }, TValue>({
   );
   const [filterValue, setFilterValue] = useState("");
 
-  const columnsWithDelete = useMemo(() => {
-    if (!onOrderDeleted) return columns;
-
-    return originalColumns.map((col) => {
-      if (col.id === "actions") {
-        return {
-          ...col,
-          cell: ({ row }) => {
-            return (
-              <DeleteOrderDialog
-                orderId={row.original.id}
-                onOrderDeleted={onOrderDeleted}
-              />
-            );
-          },
-        };
-      }
-      return col;
-    }) as ColumnDef<TData, TValue>[];
-  }, [columns, onOrderDeleted]);
-
   const table = useReactTable({
     data,
-    columns: columnsWithDelete,
+    columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
