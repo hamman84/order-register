@@ -1,9 +1,9 @@
-import { order } from "@/components/order-table/columns";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import DashboardClient from "./dashboard-client";
+import { Order } from "./register-order";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({
@@ -25,7 +25,7 @@ export default async function DashboardPage() {
   return (
     <DashboardClient
       userId={session?.user.id}
-      initialOrders={initialOrders as order[]}
+      initialOrders={initialOrders as Order[]}
     />
   );
 }
