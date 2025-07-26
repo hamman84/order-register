@@ -21,10 +21,7 @@ import {
 import { useState } from "react";
 import FilterInput from "./filter-input";
 
-interface DataTableProps<
-  TData extends { id: string; createdAt: Date | string },
-  TValue
-> {
+interface DataTableProps<TData extends { id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filterOptions: { value: string; label: string }[];
@@ -32,10 +29,11 @@ interface DataTableProps<
   onOrderEdit?: (order: TData) => void;
 }
 
-export function DataTable<
-  TData extends { id: string; createdAt: Date | string },
-  TValue
->({ columns, data, filterOptions }: DataTableProps<TData, TValue>) {
+export function DataTable<TData extends { id: string }, TValue>({
+  columns,
+  data,
+  filterOptions,
+}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [filterColumn, setFilterColumn] = useState(
@@ -57,42 +55,9 @@ export function DataTable<
     },
   });
 
-  // Agrupar datos filtrados por día
-  const groupedByDay = useMemo(() => {
-    const filteredRows = table.getFilteredRowModel().rows;
-    const groups = new Map<string, typeof filteredRows>();
-
-    filteredRows.forEach((row) => {
-      const date = new Date(row.original.createdAt);
-      const dayKey = date.toISOString().split("T")[0]; // YYYY-MM-DD format
-
-      if (!groups.has(dayKey)) {
-        groups.set(dayKey, []);
-      }
-      groups.get(dayKey)!.push(row);
-    });
-
-    // Convertir a array y ordenar por fecha (más reciente primero)
-    return Array.from(groups.entries())
-      .sort(([a], [b]) => new Date(b).getTime() - new Date(a).getTime())
-      .map(([date, rows]) => ({
-        date,
-        rows: rows.sort((a, b) => {
-          const dateA = new Date(a.original.createdAt).getTime();
-          const dateB = new Date(b.original.createdAt).getTime();
-          return dateB - dateA; // Más reciente primero dentro del día
-        }),
-      }));
-  }, [table.getFilteredRowModel().rows]);
-
-  // Obtener los datos del día actual
-  const currentDayData = groupedByDay[currentDayIndex];
-  const totalDays = groupedByDay.length;
-
   const handleFilterChange = (value: string) => {
     setFilterValue(value);
     table.getColumn(filterColumn)?.setFilterValue(value);
-    setCurrentDayIndex(0); // Reset to first day when filtering
   };
 
   const handleColumnChange = (column: string) => {
@@ -103,23 +68,6 @@ export function DataTable<
     if (filterValue) {
       table.getColumn(column)?.setFilterValue(filterValue);
     }
-  };
-
-  const goToPreviousDay = () => {
-    setCurrentDayIndex((prev) => Math.max(0, prev - 1));
-  };
-
-  const goToNextDay = () => {
-    setCurrentDayIndex((prev) => Math.min(totalDays - 1, prev + 1));
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
   };
 
   return (
@@ -133,49 +81,6 @@ export function DataTable<
           selectedColumn={filterColumn}
         />
       </div>
-
-      {/* Controles de paginación por día */}
-      <div className="flex items-center justify-between py-4">
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={goToPreviousDay}
-            disabled={currentDayIndex === 0}
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Día anterior
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={goToNextDay}
-            disabled={currentDayIndex === totalDays - 1}
-          >
-            Día siguiente
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-
-        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-          {totalDays > 0 ? (
-            <>
-              <span>
-                Día {currentDayIndex + 1} de {totalDays}
-              </span>
-              {currentDayData && (
-                <span className="font-medium">
-                  {formatDate(currentDayData.date)} (
-                  {currentDayData.rows.length} registros)
-                </span>
-              )}
-            </>
-          ) : (
-            <span>No hay datos</span>
-          )}
-        </div>
-      </div>
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -197,8 +102,8 @@ export function DataTable<
             ))}
           </TableHeader>
           <TableBody>
-            {currentDayData?.rows?.length ? (
-              currentDayData.rows.map((row) => (
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
@@ -219,9 +124,7 @@ export function DataTable<
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {totalDays === 0
-                    ? "No results."
-                    : "No hay registros para este día."}
+                  No results.
                 </TableCell>
               </TableRow>
             )}

@@ -76,17 +76,20 @@ model Verification {
 }
 
 model Order {
-  id           String    @id @default(cuid())
-  userId       String
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  code         String    @unique
-  machine      Machine
-  moreMachines Machine[]
-  notes        String?
-  dieCutter    String?
-  newDieCutter Boolean   @default(false)
-  stamping     String?
-  newStamping  Boolean   @default(false)
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code          String    @unique
+  machine       Machine
+  moreMachines  Machine[]
+  notes         String?
+  dieCutter     String?
+  newDieCutter  Boolean   @default(false)
+  stamping      String?
+  newStamping   Boolean   @default(false)
+  scheduledDate DateTime? // Fecha programada para la orden
+  priority      String? // Prioridad de la orden
+  status        String    @default("pendiente") // Estado de la orden
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
