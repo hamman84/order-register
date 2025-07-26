@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
       config.externals.push("@prisma/client");
     }
     return config;
-  }
+  },
 };
 
 export default nextConfig;
